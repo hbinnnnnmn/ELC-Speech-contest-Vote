@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ELC 스피치 대회 청중 투표</title>
+<link id="fav" rel="icon">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--navy:#272560;--deep:#15133d;--lav:#B8A6F2;--lav2:#E9E2FB;--lav3:#F6F2FF;--lime:#F4EE5A;--mute:#5f5a99;--disp:'Black Han Sans','Pretendard',sans-serif}
+*{box-sizing:border-box;margin:0}
+body{font-family:Pretendard,system-ui,sans-serif;color:var(--deep);min-height:100dvh;-webkit-font-smoothing:antialiased;background:radial-gradient(900px 500px at 85% -5%,#d6c8ff,transparent 65%),linear-gradient(165deg,var(--lav3),var(--lav2))}
+button{font:inherit;cursor:pointer;border:0}
+input{font:inherit;padding:.65rem .8rem;border:2px solid #d8d0f5;border-radius:12px;width:100%}
+.hide{display:none!important}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem;padding:.8rem 1.1rem;padding-top:calc(.8rem + env(safe-area-inset-top,0px))}
+.badge{background:#fff;border-radius:18px;padding:.35rem .6rem;box-shadow:0 6px 18px #27256024}
+.logo{height:3rem;display:block}
+body.scr .logo{height:4.2rem}
+.top>div:nth-child(2){flex:1;min-width:0}
+.top b{display:block;font:400 1.35rem var(--disp);color:var(--navy)}
+.top small{color:var(--mute);font-weight:600}
+.tag{background:var(--lime);color:var(--deep);border-radius:8px;padding:.1rem .5rem;margin-left:.4rem;font-weight:700;font-size:.8rem}
+body:not(.scr) .tag{display:none}
+.pill{background:var(--navy);color:#fff;border-radius:99px;padding:.45rem .95rem;font-weight:700;font-size:.9rem}
+.pill i{display:inline-block;width:.55rem;height:.55rem;border-radius:50%;background:var(--lime);margin-right:.5rem;animation:pu 1.4s infinite}
+.pill.off i{background:#ff8f8f;animation:none}
+@keyframes pu{50%{opacity:.25}}
+.wrap{max-width:520px;margin:0 auto;padding:.4rem 1.1rem calc(2rem + env(safe-area-inset-bottom,0px))}
+h1{font:400 1.9rem/1.25 var(--disp);color:var(--navy);margin:.7rem 0 .4rem}
+.sub{color:var(--mute);margin-bottom:1.1rem;line-height:1.5}
+.card{display:flex;gap:.9rem;align-items:center;width:100%;text-align:left;background:#fff;border:3px solid transparent;border-radius:24px 24px 24px 8px;padding:1rem;margin-bottom:.8rem;box-shadow:0 8px 22px #2725601a;transition:.18s}
+.card .no{flex:none;width:3.3rem;height:3.3rem;border-radius:14px;background:var(--lav2);color:var(--navy);display:grid;place-items:center;font:400 1.7rem var(--disp)}
+.card b{display:block;font-size:1.12rem;color:var(--navy);margin-bottom:.15rem}
+.card span{color:var(--mute);font-size:.93rem;line-height:1.35}
+.card.sel{border-color:var(--navy);transform:translateY(-2px);box-shadow:0 12px 0 -4px var(--lime),0 12px 26px #27256033}
+.card.sel .no{background:var(--navy);color:var(--lime)}
+.cta{width:100%;margin-top:.6rem;padding:1.05rem;border-radius:18px;background:var(--navy);color:#fff;font-weight:800;font-size:1.12rem;box-shadow:0 6px 0 var(--deep)}
+.cta:active{transform:translateY(3px);box-shadow:0 3px 0 var(--deep)}
+.cta:disabled{background:#bdb9dc;box-shadow:none;cursor:not-allowed}
+.center{text-align:center;padding-top:2rem}
+.ok{width:6rem;height:6rem;margin:0 auto 1rem;border-radius:50%;background:var(--lime);color:var(--navy);display:grid;place-items:center;font:400 3rem var(--disp);box-shadow:0 0 0 .6rem #f4ee5a55;animation:pop .5s}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+/* screen */
+#v-scr{display:grid;grid-template-columns:minmax(300px,22rem) 1fr;gap:1.6rem;padding:.4rem 1.6rem 6rem}
+aside{display:flex;flex-direction:column;gap:1rem}
+.panel{background:#fff;border-radius:26px;padding:1.1rem;text-align:center;box-shadow:0 10px 26px #2725601a}
+.panel span{font-weight:700;color:var(--mute)}
+.panel strong{display:block;font:400 4.2rem/1.1 var(--disp)}
+.panel.navy{background:var(--navy)}.panel.navy span{color:#cfcaf5}.panel.navy strong{color:var(--lime)}
+.bump{animation:bump .35s}@keyframes bump{40%{transform:scale(1.2)}}
+.low{color:#d7263d;animation:pu .6s infinite}
+#qr{width:15rem;margin:0 auto .6rem}#qr img,#qr canvas{width:100%!important;height:auto!important;display:block}
+.panel b{display:block;color:var(--navy)}code{display:block;margin-top:.3rem;font-size:.8rem;word-break:break-all;color:var(--mute)}
+h2{font:400 2.3rem var(--disp);color:var(--navy);margin:.4rem 0 1rem}
+.row{background:#fff;border-radius:28px;padding:1.1rem 1.5rem 1.3rem;margin-bottom:1.1rem;display:grid;grid-template-columns:4.2rem 1fr auto;gap:.5rem 1.2rem;align-items:center;box-shadow:0 10px 26px #2725601a;transition:.4s}
+.row .no{width:4.2rem;height:4.2rem;border-radius:18px;background:var(--navy);color:var(--lime);display:grid;place-items:center;font:400 2.4rem var(--disp)}
+.who b{display:block;font-size:1.7rem;font-weight:800;color:var(--navy)}.who span{color:var(--mute);font-size:1.05rem}
+.pct{font:400 2.8rem var(--disp);color:var(--navy);text-align:right;min-width:10rem}
+.pct small{font-size:1.3rem}.pct em{display:block;font:700 1rem Pretendard;color:var(--mute)}
+.blind .pct{font-size:1.5rem;color:#9a93cf}
+.track{grid-column:1/-1;height:1.7rem;background:var(--lav2);border-radius:99px;overflow:hidden;position:relative}
+.fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--lav),#8c74e8);transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+.blind .track::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,#fff0 0 16px,#ffffffa0 16px 32px);background-size:45px 100%;animation:sl 1s linear infinite}
+@keyframes sl{to{background-position:45px 0}}
+.win{box-shadow:0 0 0 .3rem var(--lime),0 0 0 .7rem var(--navy),0 18px 40px #27256055;transform:scale(1.025)}
+.win .fill{background:linear-gradient(90deg,var(--navy),#4f46c4)}
+.win .who b::before{content:"👑 "}
+.cf{position:fixed;top:-20px;width:10px;height:16px;z-index:50;pointer-events:none;animation:fall 3.2s ease-in forwards}
+@keyframes fall{to{transform:translate(var(--x),108vh) rotate(720deg)}}
+.bar{position:fixed;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;padding:.8rem;padding-bottom:calc(.8rem + env(safe-area-inset-bottom,0px));background:#ffffffd9;backdrop-filter:blur(10px);z-index:10}
+.b{padding:.7rem 1.1rem;border-radius:14px;background:#fff;color:var(--navy);font-weight:800;border:2px solid var(--navy)}
+.b.pri{background:var(--navy);color:#fff}.b.lime{background:var(--lime);padding-inline:1.8rem}.b.dng{color:#c0262d;border-color:#c0262d}
+dialog{border:0;border-radius:26px;padding:1.4rem;width:min(600px,94vw);margin:auto;color:var(--deep)}
+dialog::backdrop{background:#15133d88;backdrop-filter:blur(3px)}
+dialog h3{font:400 1.5rem var(--disp);color:var(--navy);margin-bottom:.9rem}
+.er{display:grid;grid-template-columns:1.6rem 1fr 1.6fr;gap:.5rem;margin-bottom:.5rem;align-items:center;font-weight:800}
+.lb{display:block;margin:.8rem 0;font-weight:700;font-size:.9rem;color:var(--mute)}.lb input{margin-top:.3rem}
+.acts{display:flex;flex-wrap:wrap;gap:.5rem}.note{margin-top:.8rem;font-size:.82rem;color:var(--mute);line-height:1.5}
+@media(max-width:900px){#v-scr{grid-template-columns:1fr}.row{grid-template-columns:3rem 1fr}.pct{grid-column:1/-1;text-align:left}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="badge"><img class="logo" alt="English Literature"></span>
+  <div><b>ELC 스피치 대회</b><small>청중 투표<span id="mode" class="tag"></span></small></div>
+  <div class="pill" id="pill"><i></i><span id="st"></span></div>
+</header>
+
+<main id="v-aud" class="wrap">
+  <section id="a-load" class="center"><div class="ok">…</div><h1>연결 중이에요</h1><p class="sub">잠시만 기다려 주세요. 오래 걸리면 새로고침해 주세요.</p></section>
+  <section id="a-vote">
+    <h1>가장 인상 깊었던 스피치에 투표해 주세요</h1>
+    <p class="sub">한 사람당 한 번만 투표할 수 있고, 투표 후에는 바꿀 수 없어요.</p>
+    <div id="a-cards"></div>
+    <button id="a-go" class="cta" disabled>투표하기</button>
+  </section>
+  <section id="a-done" class="hide center">
+    <div class="ok">✓</div><h1>투표가 완료되었어요</h1>
+    <p class="sub" id="a-my"></p><p class="sub" id="a-msg"></p>
+  </section>
+  <section id="a-off" class="hide center">
+    <div class="ok">⏱</div><h1>투표가 마감되었어요</h1><p class="sub"></p>
+  </section>
+</main>
+
+<main id="v-scr" class="hide">
+  <aside>
+    <div class="panel"><div id="qr"></div><b>QR을 스캔해서 투표하세요</b><code id="url"></code></div>
+    <div class="panel navy"><span>실시간 총 투표수</span><strong id="tot">0</strong></div>
+    <div class="panel"><span>남은 시간</span><strong id="tmr">--:--</strong></div>
+  </aside>
+  <section><h2>오늘의 스피치, 1위는 누구일까요?</h2><div id="rows"></div></section>
+</main>
+
+<div class="bar hide">
+  <select id="min" class="b"><option value="1">1분</option><option value="2">2분</option><option value="3" selected>3분</option></select>
+  <button id="b-start" class="b">▶ 타이머 시작</button>
+  <button id="b-close" class="b"></button>
+  <button id="b-rev" class="b lime"></button>
+  <button id="b-gear" class="b" title="관리자 설정">⚙️ 설정</button>
+</div>
+
+<dialog id="dlg">
+  <h3>관리자 설정</h3>
+  <div id="ed"></div>
+  <label class="lb">QR에 넣을 주소 (배포 URL, 비우면 현재 주소)<input id="qrurl" placeholder="https://..."></label>
+  <div class="acts">
+    <button id="d-save" class="b pri">저장</button>
+    <button id="d-my" class="b">이 기기 투표 기록만 삭제</button>
+    <button id="d-test" class="b">부하 테스트(가짜 70표)</button>
+    <button id="d-reset" class="b dng">전체 초기화</button>
+    <button id="d-x" class="b">닫기</button>
+  </div>
+  <p class="note" id="d-info"></p>
+</dialog>
+
+<script>
+/* ============================================================
+ * ① Firebase 실시간 동기화 설정 (여러 스마트폰 동시 투표에 필수)
+ *   - 비워두면 "데모/로컬 모드": 같은 브라우저 안에서만 집계됩니다. 리허설/시연용.
+ *   - 설정 방법
+ *     1) https://console.firebase.google.com → 프로젝트 만들기 → 웹 앱(</>) 등록
+ *     2) 빌드 > Realtime Database > 데이터베이스 만들기
+ *     3) 아래 apiKey 와 databaseURL(또는 projectId)을 붙여넣기
+ *        (기본 지역(미국)이면 projectId만 넣어도 자동 추정, 다른 지역이면 databaseURL 필수)
+ *     4) Realtime Database > 규칙 탭에 아래를 통째로 붙여넣고 게시
+ *        - 투표는 기기당 1건, 수정 불가, 마감/타이머 종료 후에는 서버가 거절합니다.
+ *        - FB_PATH 를 바꾸면 규칙의 'elcVote' 도 똑같이 바꾸세요.
+ *
+ * {
+ *   "rules": { "elcVote": {
+ *     "meta": { ".read": true, ".write": true },
+ *     "votes": { "$ep": {
+ *       ".read": true,
+ *       "$vid": {
+ *         ".write": "!data.exists() && root.child('elcVote/meta/closed').val() == false && (root.child('elcVote/meta/end').val() == 0 || now < root.child('elcVote/meta/end').val())",
+ *         ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 2"
+ *       }
+ *     } }
+ *   } }
+ * }
+ *
+ *   ※ 진행자 화면(#screen)을 가장 먼저 한 번 열어야 초기 데이터가 만들어집니다.
+ *   ※ 동시 접속: 무료(Spark) 요금제는 동시 연결 100개까지입니다. 이 코드는 투표를 마친 폰의
+ *     연결을 자동으로 끊어(FREE_CONN) 70명 + 진행자 화면이 여유 있게 들어갑니다.
+ * ============================================================ */
+const FB_CONFIG = { apiKey:"", databaseURL:"", projectId:"" };
+const FB_PATH = "elcVote";
+const FREE_CONN = true;   // 투표 완료 후 폰의 Firebase 연결 해제 (동시 접속 수 절약)
+const LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAbEAAAGkCAMAAACIFeurAAAAkFBMVEUfG1718mAWFGj692L071v+/iOfml4lIV5jXl/z7lslIV08Lj7Evl79vj5AO1+npldubGf9qlSBfF+/vz9WA1f///8AAP9+fi+jnV7/AABjXl5jXlyablSfmV3/f3///6qvdz9CPV3/fwB/Hx+qqqoAVVUA/wBBPV5VVap/vz+q/1UAAAAmIl3y7Fv891woI2O999rDAAAAMHRSTlP4+BEOpAL+Xf5fnQT+BP4FBgP8BAQBAQOiAalZBmQCAwapAgMDAwFGAwQDAP77/v4QZ4QdAAAthElEQVR42u2dB2OzOpOoVQzGdhI7seO3v1/ZfrHx//93V4WiXjAGOaDdPXtOQkDoYUaj0cwIlEtrG9quEfl/p6Q7CRZOHbAS3W5byuywEHsiZDewJv/67XMh9gxtV65vl5oZPizEnkLKCDLCrNhgwixbiD2JlF0uoMhXlNlC7BmkbMuQgbwizPBCLP12QgzZBeQQbsosW4g9gcF44cg+IExQzBZitqmMSlmVILKFmAnZtkMGU0O2EDNqxlovgmt6yBZiJuOjFbKiuhJkSS3MFmJGYvVMdgEvBNmqfF2IpW8uXlohuxIjHy/Ekm7nZiJjxse1qlLSiwsxCzFJyFYJCdlCzKgVm3mMmYtUyDK8EEt6GgO3VshgYkI2c2Jot0Oo/gfiPzmVIjBOrLriMluIJTBfIYUfoj9A64sAjGpFZi6+LsQmbztKZ8vber2ucW1vHS+26XLlxBYZm36ZXCJCR2gXsN1ebqJ8XQrIgC3EEpi/FO1HG8fWtSKHFQdWJeRcnCWxE6K8wE0GprUcErueNpiS12N2xNCpsS48vKhWBEVBsdGQj9NuhxZi49Paldy6COBVM6Nty62SRcbGXniVcbg6bPR6hu2QLcTG8mLw5dZ6Cy63OF6iVQJQuc8wXoiNAYwuvPrSaql9x3iRsXHamsG6h1a98QJXqw2e1mM1A2IIbe+FxYPhqIMRQljhcr8QeySw83YAXnyjrHZ/vC9a8aFz2HoIAav9iwlsvIAvDwzdBuDV+BcJsKkjCL46sTZatC8rQP3BedUByybOBfz6WhHcQ6zIP/LWH0zsjlU2uQ//ixPr4tj6mhu01bjSyHX58sTuszu4wUFhwWq1ycplBZ28pUiDggkr0iisFLZcvr5WvJMYoHtkjBQ+JrEN/fUtj8vt7pUzS5ZIpfTAVyd2KreDuBOTCfOYg5cK3ClkF7J6TihsYAZeqiH0YkJx3DOQsbukDHR68bgQG20q648MFIAyS0kvzmFHE5Wop/lB5rA30OrFNJDNJWpg3WtTk+jDotWL8BP/WIiN6PvooRmpW5ETq/XicSE2WtuV8bEDLK+FEUtJL84mwpRqRhAZp0i3MZnl0dqLC7HRDZCbLe7XvO9cwfoX4O2aiL04pyhuLmY3bdMyzwui+0Rw9N/YvnOVg4tUdOAvXohNzoxlQ1zhC+PGYNGCmCw1s7oKwgfT0Iszy22h4dxrRTcy2Sp46hGx4fP8hf4r23bmlmJaxVjml41Ulob5jAfgFARWJTRYAHVzE+J9thAbmxmBdjDYIKBWiMVHzltxAVqM6fRCNsscTcrM5rgCQjPslBHj47DEK07QDn0cV6C4VktM8JRyFr1xVgvZtDtlM67nsYvehUlCyOZcgSV+r5OFL07sXpwrMbQ7MymLTIlOQMjmWoGF/98uNgA1ASGbJzG694I4ue0tNkpnYiEDiemqpoYD2pH/QY8Ddrvd1sTIPx4ip7LphSwlYidkMsJ36PwIYJf6OL9IvTi9kKVDrK6Vt+VVarr6eY3soWGB0WoPW7zalLFBw6xCJv6B504MNdVspPJ5tH4e4bYTJG7HCo6i/kWiUGcggoKepYPi1eKUQgaSAWaqxdbVPaQCh1SnRU9gF7EIMKxwlJA1pZ4nC8RPg5gnbqYROLBtGz0GGPUDJhYBpokr1U8QL2SbeRPbhXllZY1J7AYUnfevuTlYLEd8YQ8IszkTk4ABV5P50RNl444n1YBxY70A0bbHdPtkIA1gchFKW1O3GH+uNlHHk+qORCYwXfjNM9ge0xM7iMBoRIyj5QoyetTlMXjojPH3YohbhFqcrgL+5MSETGVwycVSDDS/X2r0J3LkBbX1gosuG4GxLa8r6KUW50qsVVQsuJ1XpoG0Kh5L8Bca+8FGGvQ6STkMmdGHyAWmeCK1ODWxk3CoTVesa+MYjK1q6xFk732B9SPWqEU8Sxk7tSJWl8Orqg0zAbMM6y07Imkl0CyOsJ+X2RvFF8SRxNjJIHDzI5shMXEW4zqxIuO/d5ns8log0ApwJP3BaGIscnEytTg5sa0iYnQgMp+DpLXRWQKD3wpwAGOmRyyxfEJrMR1iH7WI+f0YAjIQdDyYK622F7GiPi8Jz4+YMPYRhxB1K2E+pXg+d2fQVC9ifCJbzVHG5CNGr6HRgK3Q1LrUuSmMnPE3LPsyklh98B9ciIWPQiNljS61KyiE3G5mmusML7HEJpzIJrfuZeM+2ACrkd2gR8aQLyyABrS9RAKbdCJLx/J4u0aZzAwZ+MmBWVezO28pDzon5b2JzU/GdorLI2KRQ5Ftyw2fUT4/rQJ283sJi2hikZ/XF11BM+8DjNo7KfcEmU09IRRWEQLCS3xj8Tlwjta9uBomNsA1JnPkXNJCyytIvvW9SXzDykEAGK0UhTOHv82OmLSdWdD65HFzA+G7WuHPzMArsOQKyN96EONrkSlOcJl+R1M835wMRKwBxuItMgOv4IS+t941uicxPRLY0VyL5/kWOflwd1E1edVDA/g5tOHB2WAhFtfkSr6U2YYISe+jNlDYObSxVTHN5v1qlsSEXeiG2XeiF3sF/aIT/UfsQZn+o1vsxPAsial+P3Arfu6pdouCxi+PP9g04CArq4zBecqYKSitSTzZnVAYrV35EFx8ztLNf06sgnP0K5qRXS63C4vU5mrTmtrCUifqf+WJFpfBG6GjOUVqYlP4gtOIuzd6J1iKhHR29pnmtHT/K3Bb330QrcslpQc0zp6YI7fl0ma2IIOEEVYU1sNo2TyPNbFqvsSYmK2N497lkom5LbQB0OYrPbTRdb1iL3YyhmdLrOS1onw5STc1J3CERh2e+ULMuJbma19wSauxXQUAFmI2ZltwA2lBAy+qkC3zmOjDLf/8LNJiRmsGQ5Pv/roQ4/NZib/nKUHT460WYlKjxQ/xJmfQksBGJjIlGKQ5EXWuPg9VM57oKdl4s4L5R3FJghpU1CJPEpitX1HXivVqmUK7QppNO/1EpqhFOGffvYZsTY8L2DI3B/r1nZehT4CYoBZ5GPds98d0p7CwPDYf0TGJ6ZErte9nuwetIgO3S3KNEYOXhZhpObZOEBiN8pLcHnUizkxjqZ5AxLTcW24q0uXYYebE7j7U/oHmvUCsMTzgHLORVKW4fQpi9TQ2x7j751CKGrF8OsMjLWK09mGajU5c1QeQpjFqeLzPnFiilmJDLBdPaJxvjqbSnacgNuU0lhSxdJWiQmzKaSwpYukqRW551MRq236qqvdgUYrRxGqlCPGPct7EUlaKN5FY3kxj2cyJJawUmXVYE6stxcmOAklKxrbJEhPKCTdeYJhlM5ex8ZRi/H6bVAAaTqoUEyI2olLM7yDGKiJMqBSTkrHtWEHZ8TVy8o7Yr6q6zrt6eofsMhIxeAexG8DXOmn9debERlOKpgS+kOVYTWyNr5OWu0+H2GE0pZjHl1PkdTcJsRtAuC5JdSznrhXHUoo9KofVeRGU2LrE9WlWeObE0IhKMfYIibruJiF2AwdGbDkxbsR4AZpw2SfAlBNblyWuQmvjfnGtOFq8AIw8WKddNBNiAP0fJbacfDpiEBWtL5eD+L/hxNbEQMLVpCKWCrExbfsexLiXI9+Wpz0htpzgXdLilmC0aSyeWO37LVCGKLFJRSydCixjeYH7EKtDp/6UNGobT3cgY0LE4pVi73wXWMW7PGCTkPmDsNpU0eetfkkZizyTGbwVvZiBHsS6ZDF2aOdmWhFLg9g5RikSUkUOYb+8TZbRHE0MdgVLs3JaCUvoPOhwKfmA2hGoUWZfF9sbpRUJsWMKg5UEsVOwUgSXnCaR986zVZMtI2zFxuDIFmIRXmBQ0ONrX/qn2fYjNuVxY0kSC3V4sNOHmbPoMi6xsIMEZ0Qs0AvMLYAqvyePnQz+tYcnGE56ynqKWjHotA7m3Ys3GzTq1fXtiY4bS5FYmMOjBpbfWykC9jnSr6imjJ5KjliQbc+Dzu4HJiWpxNn3k0UoJihj/mlsKAnj1W/6bWlCWH4uxAJt+9rogJdBiPVUi1UaajGBs5EClGJdP2OAAlVSPHakazEN+356YgG2PVNlQ+hE7gom9yr6WItp2PcJaMWzz7ZvjtwYaoOsj5B9JGPfJ3D+GApSSYPoxG5KivSbJOSoAulPY23s2WDBVORu32OjFJKx7xMg5juwuY6LGaouJrsfXEVuetf2PV6IlT6l2OjEfLiymMz2wHERrem4PVI6q9YdyDQYMS5km7joLcDVYgL2PUhcKTY6EQ54Rgv3e+BTHLJU7HuQtlIEddZxBQc8vY/dlIjLIUYxchuT2Pf/njcxn1KsdSL9uNkZfmAgC/9asTNXtuFfQev2eJ03MY9SrHUi1WH8WNNimMrc9L7kI9iX6whkL2moRTAxMBQQxUSIbcr38nQoy82Knw0yCLINQUaPIn6ubU2QslIUdCL7shE70AUOAY3ut/FS2ihQNaZi30+tFV32WltPqIubxmf6jxWBdq96ZHMZGX5+gucTuT3AxEoxSMREdx6mYZ70QJeXnJ3CcwcyCCHRcVRwg6az2u3xOW9iLrujMTuU2R4d3htoRNTe+ssaAC8UGWYneIJboH0/uVoE04qYP9zdlHS8Q3v6E0zmtCuh1vfEKxZgzADs6GwWFn03udtjSmJuu8OoE6mFz0+6Ohz2Zy5qVUUPvAKxZ/KwywtIzNBvTMwCdsKTcHtMqxUduqjViVBKJkHkb7qT2Pf0EI49p0axFZcAcM0lRZHn8EpzZCmDgOCF1u2RzZSYU8Ra95Qyb1BjhZ101WJjv8U1Nc6tAA0WQ7vcCsYKUr9HxaSGMfAH4bXR3HPNH0NOEeuWYrJbqK6G1FCrdWRZyxrk2K6UXJ5/FHKjP3tpUDXeFNLITJmFROE10dzHeRJzi1jnntorOujcmSuysJWNsDXcYGVuHSqmFDcbjOsebQN2fio4rVoESYpYaycaVJA64RiwUW4UHGzAqI0trFYdq7qdPEZ+6/bYz5HYySlinU7UNdDZEJEqYcvOLTiKjsITGv0B/UV9TXbM8EGcJP1uj808ZcwpYh9WnehQXq1FsiNT2muW7d3jmpHJS81pRiGbPxNHc09FzDU27SRm9i8gV9g3pQaow5iuurNPIksZaeS/eMv4f2Js8TXtAnZ/JnZ7TEbMPurNKRtW9eNLm75duEtkcAM2iWjuiYg5vuVmJWY3o727akR5rVb9zrj0Oaen39achtjJPi4tMEf5p50/nAdS9xPu9S15XWfTuj0mImbVPSIw64gjTwLTXTHXzs+htu83c6uvaB+UZiFGgLkKnnhsuprYqt+6yT2VTb6tOQUx+1xBfenXZumc9TcQmAOwr3PCuSqr7ftsVsTO1uGui4VyCct6ToRdNkTf6WbnW3lMat+DdHQioLUPuZVYee1nt4XPTDpKDJcDI5vevgcTADMPB62Ic222xPwDgly7xnUCU29JcC0+prbvQTLA3mAMMDrbgJvXWOwrCfZ5cnL7HowOzDytt1MY+X6zoA/Yhaw1FnsTs1ofk2drjkzMMsygcSWyKQwddsjfdg5k9WxDzHvUt1mnsiba4+vLGDERT7baHdTm4A3GfbrWdR3bzYR3ddiCjC0dIDwfCNbz+QmJdV/ladc18l/8S1UutoRyFvlHztvP9Tam2cJ5Qc52Ln+he9r2Zl00UvvePBDdGJw6eR2PWAtDpkE+rj5Q19asBCFw5hbZnPGIj2msUPF3UYPGjMTuTqagVljivULvIH6Pa7RumyADQIxGu92SPaA7OpxYkO36FQXBb5o8Md6BNEzGBBo6CzUs8D5heOIW/NIyVRPUUBlTsIhEgnp1Wdp9WCWmOtK1ihNwWDUlw+2F0MylPZSpeRpnLLdbhI91UAqwqcNG4v7FYjPfODB7oO3SQkP9bcNHD8p4q8VMVJhnzfIgZscB7ZtAMTFYDHZhmtR3RNtLbYQL4bZvDTDgbnOlIb4+O76kac2ChoYps2hXuinA4yvlWL2m8ZC9WsYaXjUoIWpWjsw0R9hCBWfOgt91pgEvlgBn0LOPTEiE1/7oRuOlg3KtXA3aAmLrkFj8w2or1tFiWJK65qHsuSE0u6Dp5qoXESsXVjU6/u2NaQeNFnhkMz2LdqTQmtL/BkYIDzuYZpiunYR1goWFgNhuHmMBfcdXZzBfcxk2qFAo0DTxdEPVCYuUW9is5QM3fle1q92bxDYIbe8uvpeq9bBGRh/7z8yxHvtB0H3yW7x2IZruFOCOZsdTCKBWhsLOVXrNUMyPahD6+9h9Y81HZpqHhNFxrrf4uPNQ2Fd+/YH+e0+/Iv3T7C+/z5GzxOS2+8AjnrDSxHlVjo5vCWuc5RY1uAZZt95Y+gOlaxvFHpBa2DCyAcx4xPKRGO7vDZgfI/ruGc3Pz6bnDVBMO0SQHg79botD2ya4hd6x54bK4cAHoCHyykTlnWupTJSX9PfHMoUqf7FX/mM6RK+vx/tHbNgmdvb19TWrQ/kJiGPdV7Y0wp8D0Eg2XrEH5bYd8JBtrwiV0lIcj/SJLW0hthBb2kJsaQuxhdjSJiXWJ5zPGO3h2QG/58KwPwx/xCM7F/53Pa5MUsaCIrXQRJ1DE/etr4whzxcX+umcjLyCOoBCv/++Imb8S1Q+vm9+GYs9deZyu9SdsiTv3dZ6n01ln+h9DN9nQB16WgJC+1tzSgoK+OSN+RvkLXZ67/xV/Yx9C319Mw9W8eIeYheBmLHP2/LUs8unkOKULJZFH8+HEwv7mljfUHLEst8ZdhRqQEd138Hc5VP2KlUU2AUVgG2G5RREjHe1D7Hsn5lSKjDsGIqbCbaRmPL6dmK/myv7y1jpkDH6eZZlFtBlbeRQeGe0L9kmY2VvGesl/sa+Bb2+g1h5r4yxjb3y3UYMAPrrb74ut/cRZomIvhDlK42Lmdh39oi/8cRATnvX5vZFfU1a31yvj73E6HjWV/YlxnZmy1erVrxBqOQxmroMQH2fXsDosEiTlJEYewRsP4ooYlB4CxQFjPZtJ/bN9fqZn9hbe2VvYuzgEzsxWrZm4yd2uVZdmdIQO8wwI+98xNgjehGruhITu9ivSfmcXK8fQuxa1VnCDyMGaNWLzwhigXaYC9kjiNUyFi3+at+SJ8bSLqVcfw8xFDGt2yzpxxHrIf6sbx2yJyBWVHINBTexc+QsISPbP1zGen1NrG/fnoUYu0S0PZzEUG9g3JL+/Uhin6if+EvInoAYeV/J9vAQ296RiXbbcyl7ELF+KrGZz+uv9hmIvcmlZR5HDNzqTyNFYgVsTJf0tSJ9YcH2eKCMXSA7BDBRYrwa41MQk5dkjyXGitgkSawuZPcMxNhA4pGIsbpDaRLjNZGeghizPX7gkYitUiVWPRExaUm2EHswMU9OY5BWpLUIW9ujB7HgRNspiIV1bTRiABTuFkZMtD16EDM++Q0kQcw4QDqz8YgV/tzXAGLUHYx7EwPG/MwiEWJ5UN9GJHb1Nj8xyR3ci5ghKTMdYnrnJifmFrIQYsz2eL2HWMIypo/Q1MSqu2VMdAf3I1YtMhZBDPoShv2H3gju4H7E4Ep9qMlEmYgY+aXcjAM5KrGAcGUPsc4d3JeY+si0iHmHemRimat9ZmEHS9W2R19imZSdjLKtXJFOWB1OQUweEmDo28gylt0pY4Lt0VvGsBJFTQsLGleHk8iYNEK0bz/zD6EV+Uh+xcGIcXfwj2woYrxh4+pwemKmvj0dMWZ7ZHg4Ymd0QNhouU5PDKHfu41uQz4ZsaIe9eFkjMyLiRKjfdtAfeX6XFqRu4P/DkzMtJ5Pgxh+dhlr3cGDzmPG1WGWxjxmW7k+D7F6K3pIYtZxT4CYdaSehlizJBuUGN4rjX3HaRAzLF1/PBkxvhW9yNjTEKvdwYeF2NMQAx/U9vi9EHseYnQrepGxZ9KK3PZYiD0RMWZ7LMSehxizPd6/JrFvgUWORomlGmBHU3IHfzVipP0jopyV+fUrfc+2Z4QpD78zta2Ujx1GjLmD++5BI+8ZHnWK+KjE3hwjFFjlyDbKxr38sJhg4xFnIJ4Yz0zqTcx7kt4ExC6uUz8NyBxRzwGn8N0Vd3/bZvu2sHgwMeoOXvcm5muIdAknlD8mF61wEAttdxLrYXkAWrJl+zhi489jnkG6oYAqR72JxSWNA8AO0mhC2tAlVC2a4i/bHBl0F7E/vEe7czK5LVr5t/7Z7zoxFCdjoKAFd+piSgiFEiPGZw4M3pBBZIyXAMKot4yhwbOR1PJv98pYdW2J7SL7Q8ae76rGFSYiA/cBjINChvNglPP6lwFbcPzCvesu755Fiok1XeL0zx+TpGxnLh0a3vJWxqLL94jEIj4c8mem+Gu6UlvZqnnUvpKgLTjfXd7dwGx/eU/Gn1D+jQK7ixhoo6tBdG8kGduaX9T4SINWZINNhtP2OkQDBxELuItbxoD1L6t9/xzN1srvU9XK8IqcWHRnOmK2yRTkZmkyEruAj5X9+wPFKgtzXfru8s8ewHg5DrKS2d2B7FDelZYrDuCG5uKBbX9itjc1swGFhVixsqt4MmJloLPZc5fDp0Mn2lkDmDFt0lNGyMLsx2EwYiteEfMerWgWMpBfjS9fANva2q7PrtUqSCuSGcdzF3utYFQ6/xKzSiG9kdGIuCGQ0fURVYtgd4/lYZ7IyL2L0IOcwQeLwDQPGZv54eoAQoCRC513cWyM2C0PuviAuPxkVPscTk1k/y7i8lKDzmR3W/dboz2dg/B+sIBeo11e1OeD+9aL7V1OjrusHKc8mpExYAzZv7PyVP4pQB9ikCFDA1j39FD1De6zgpaIIfMAhr0d81LxqFl7HnQFvV93wF3c+zauxFm+1CNf9qYHMrprAWlY0gAraI6sh5cqhFigkDEvFRcA+1gTGfP6PELu4jpJdedInIXMXOyJjG4NwwpneAAvFX/FeE9wGDF4iZAxuPoPe60BOo/dQoiRC113cW7wO4jBprYzERRcxE5mzhzNWGJsj/lBxK5htgcnRgy5Q2Yba7jKAvyK/rvsnXvZdmLcVuTtnyXOI5ENSYzaisesR5WjMGJ5MDHqCbZKB4T1jubFUeSoyYN23cV9EIjddy+VpybYv7v2wqOJBd/m7dpEUEQTewskdr2AYGI4c3ndMxY14CeGnbktr73r3YvHQhMF+b2YjBj3efSrmeMnVv0EETLmjsxB6IA2cLJ6HuL89xeVK2gdluh6HjD0NvfVpQoj9ms4YvTQnjr1cWpiZXYoN7QbVTVMXarA29xdlypAK+KAmTaKWBIyxvtSVQPJmLkuUX9iFbS2AGLrgYnVbXJi5L+xZWR6EatCbhMYE7zaWJsrzqN+U2LiDUgMN0+enpjYG7n1q5kTcpvHVjlq3nQ7HLFJqxzpK2/bSqEXsc0gMcH+KkcBxNZDEsPZK33sPkuBWInNg9JPxkJu89hMiTYGyetL6VPlKAliQ8pYArktbVm09ULsyYihy0LsqYgdvLbHQiw1YuuF2FMRw6VvSfY0xJDeviSxnU8tLjKWGDFvOMqzEEMoTMieXyv6trefg5gxbEdJXfkqxHyRdQux1IidPbbHUxPL9kf89bTiyW17PLeMfcl5zGN7PDEx8H1FGv56lkfpDDZ8ZmI5hFA1/acntvun0a5Fu8a29RJz2x4hxNBBfnY/Yui3+UXurHK0l3s3KbE7qhxJMuY+Us57Ytwg57aYKgkNU+UooXkM5KT9XFtbmy7qI+a0PXynMpI+fKhPBpHEzHfp3uPckxi9ba7c7TIdsTr00V5YaB1ObN2bWGgNIDcx55u09ZEGqXJkuCqV04XJauSQZUFa0bUVPcbpwu6G+Ht8/fOgm9VIADHXMCZA7EE1cxIkxo9KCLE8HLbH9MQOuK6U/9WJdRU8A7Si/f7TE2v/ciHWEXMsyRZiSRIr7e7ghViaxOwDORAxkDAx8IzE7O5ggdgd9S54DuLjiB0ic/vVezyhVrRX6mqIOUsN+fvyWGKZrThQgITlY52jOfA8ZlMrHTFaz67Xhwza8isPJIbKXlobXF6q65MSQxcfMVaVskeFk0teXR9OjCJbAxD9MTXFX55QK1qGUiTGymX0HpQHE6M64CeILQwB20I35T+ejtjaT6xHhZN2UFjZqfKRxDJEC0PE2vUMWMWKUT4XMZvtIROjyD5ikHWDwl/mkcToP79H6IC6gFkD7OmIWcZSIVZXOOk1KMdHEyNSFlGYihuwV1aUit3g2YhZbA+VGKtwAuIq/XWD8mBi9PTiUGRd32CbMf5sWtEiZAoxalN9DyxppQ3Ko4mV5HWJcQQi+/ZqHwBwB7HbDUS1jhg7fMf4S6wGUujPuGgliLju8bd6qSNVdWPE4t5EJGZ7D2FA+Uzrazexb1j4ZNUn2GVM64tMjIYB/YEv4Q2+wNaBQ9t3aPqlHMxHLvv1oj4EXvWiUTtau+MF+jugDkr9Jr9eIl6lLdDF3iM3voc4oMcSQ/gS3Lcfat+g6fVVYgYe8HoViTF1BKuodmUvUxe4XkHTL/UaCitouI9W5utIK5wEdIAZiXrJZhz5HkJIJDS+ZCYXhshWMLBvxEjMPH27moiZeMjExEpd4a0mhtAe6cW1DMTIdcaH6IXZ2Icc1IVKGRQaSomvVdR71MTIXx6g9pcVVPPHcOmqJebs24H0zfR4XcaMPCQZw10VofDWyFhGXkFrlS5jWYmvpvvopfQwRRbQaDnxLOwhjlbLmPkvDXWpwgar0iOqza+1MpZ42diubInhVXyriZHb23+p9MN0m40eYh3YH3MFotjX2DTEPsOekb2a38Pbt09j3zaG6QPbrwTlmC0b+sp9OUnDg10U30An6/Gt65zrl9JbmNpfI7K4HngfEnSXvf67fe9HhL7VoQy98lMitrQnaQuxhdjSFmJLW4gtxJa2EFuak9hJSOU9OS4WU35PTSb0CYW18Mvrp3muPCHfuzkqE4X2+uR4c/OwnK3P9tRI8neJP/iZZQyVc+w8O39MyQy2PsR0HVoHNhR6eeiNkeetkf3e9/UauYflHHT/oO6aOsNPZZQznHeWj4KdUdS2bclUhiNXWk4Rpq+iPsvYAH3lkCttPW26a/yTU8n3qgMbfYZ6q634XKQNH7I8+6bcRPrggroE6J9o52je1viAbcTE67b4NzuqJzSyAuH/zELO7LyB/8T7sCvXDikz3oB0+oDLiKND2Wjob37oNr6UNBDTH5jvvN2JvQ8JUbkB+mADMftHKz+xVqvBxMqwobqBMvDKi/qhlqVnCOpOxxAjl5/Nb24hxn8acOstKk+RxDqtKP74l8XvrH9p7LpgYnvmpg4hRm98ChrU9hh64xRtIHYht/4WQ+wXc9+b3jwzE/uX/gfWF0Wdeg2UMdI0YiyAyBSjoRCjSVu0FE0wMVq6pgw5Z+KNRW+EDaoDmTkxFIaVnFZGQ3/zjYUY+4NNEDEJWQgx+uBqNSYxGEasYLEPgYNK3xpZDA8zATLY+/uIfXiIwUBil8YSiiAGn54YRZahQMODjTa59yERYgzZYW7EiO5Dv1GY4cF6nRIxZqn8x9yIXW5/yn0WZHjwRHKIUTrEwM+mquGMiAEaFaYgO1vHDIadATQasXz1XuLZEYOro4LMWt6Amx4pEeOJHrMiRu+8wn+zAMOjMT1SIkaGBWefoxIT0zCUSUPOItGJmVNDTMRcZ1yTlZ4auWsdAG56MCdeUK8HIebofH29lsJtO+3+fmKY+pTzpkmZX7zKZ9uuOjHlivZKnZhypZxhZiBmlX1uejBH+Ud7O/F4eF69tW1wAGKuztcrbo3Yh3FkhiDG+t0mYEClM3J2hk4M2tNNtF6JLfcQOzvUEjc9SjHRRvzs1bPLr0MQk+74AgJkzD4ydxNDB/TeJJPII9lmlrZpIhqxl8qabqL3SriTj5ijzH7t9SBruC5DRSGmJqkMQMzaeTsx28jcL2NSSohGTE7OMBCrLOkmBmLdr33EXAUCmelBOi0k5GjE5E4NQqy7ZaCM2UZmEGJt8sV3TUVDKTnDJGOWdBNDr7pfF15iVsuLmx5YyrNRiSm9HoKYcMvvoTJmHplB5rHuGkPnHUY3IdZMKh6/YN2rpmk6X7M87GVTgZ7FJ17c2MDKPsC9xISBMF1vmseutjiPAYjV51n/ztZ6Z/jB27S9ZthILNOOw37N3o29qq9UT/E2EHMdyQTr/FHcdO1w0YhJfToMQqzt/DqUmOGY8NdsP6SModLUmaNXxj6DZey9fo6HmPN8H256HG14m1WL4817yhh2DJKZmDGL7ksSc+4xN6bHQiwpYvIFhcn0WIglREw1PHLJGNRMj4XY9MSQYh2qqwGlaNZCbGJi6iAWlerKg5uFWErE1L8tFMeQanosxGKIXa/YmPNh7FV7oJ6P2Fb5W5mYanqMQwzt686HE6NnKWojMy0x6qEO9XlUET4PoDwFOr0eIxCrevg8qgf6PHoTo7XWfoXJGHyBv9Caf6TIt4KWENBCd07T4/HESOe/t50PkrEcwvx/jCMzKbGLfkye7UAw5UrXHrRueFxNpsfraMTU4wBD96ANiS2TEzPEix6yb1lUMoNGTDc8rm7T4+HEPIEkJmL6yGyzw2fGiaERiSEvsebK8x3EttoLOU2PJIghL7FWK6IBZQx5iCG/jNWZNai/jOmGx1UJZ5BNj3OZADHv4VDtyNBEA/kFC2iuP6odXZKrHlXlPBoWPiURQ96zWdhgrugLBJ/iAhRiZ83jweJZbnbTw/Re2PtemeuXwRWma2IH126D+CW9UhlThga8mapZltph54DYb4qMqXcCUCKGnNtW9cMZsW8RwNT6ywbDg4yJqijbjqGzOrrsvbAVGDtAR5Ax9aXJ57CJAnblIa/BxPRBJF+lTsxYrh2uhFDcsz7I4AY32TFsn1Eihv1XtgOUK9V8DYbHFWL5Z53pYXyvfIWdZ86QT3HD3xwZXzrmHANeTRYFhpcyYup8QT9anBnmMbVvRH9upFLT2ndCvlax9Cryn+LVyBgKPEAO8KAjkdjJYHhcsUqRPGRvf6+VfObMxfTmmfWlqz+BCqKOEKuIVvSPTKcVtSk+r6qVKVtEeTW2kpeFUb+TmsSwDtOK+BxmeDRHI1WVaHlohgeE+tzWmR6+99LmVOqA6YrqKuJBNe4qSKc3J6cRDUDutY2Yx0xxZnq2iMlWFI5zMFn3H+xOOMucutVILMxWpFNuXfa6VQpmw6PcW00PpFn3FXuvT8degHAugnn40C1Qn7MC8Dj74V2PCcQM6zH6zHes1/LRQrrokSnZp6gXDXcS5gTveqwl5r3y0h2NVJ8+5DI8ytJqeihCxt+rEo0v9c0/Kn6+B/sUyS8NLw2BH9hLJR7rhCKIGT4SMgYYB8gY45E5VtDsC8LhPo+OmF/GOmDurRZKTP8sBTtXW0F3PGzrse7NDeuxK80vD9XnkBeAj5IxwwqafLR/yxCtuCodWrG+U+b2KypHnliIGXJQamBQAmYwPLjXH92sXg+dGFwpO6QXXduXjVZEhpc2+BVt+tx8rJMlscVKbBPu8/i3z0uFHb77wpLYgo1XKkZzDQw6g0tB8UH+Z0uaw/TQfB7w6DiKi/k82ok+NLelACYrsf2gtWAidVw+cicxUw0W5KpqYSeGfftj5nNUTPtjueGldWDoYvabq56tbtFp8itmPi8VdnmpsJ7bcr3oc4qggQJyW65OYiPuQZvPUTHNrtc3YDJWcVA6rbYS6sQfmWKCB96DVjd8ADfbhHV/QG5LGsRMGRwWYkpKC8+mVU4QCdylAaLzcIyoAcUZzZQGtG84WHJb0pAxQ/4GWQsZia20UX9VOxp4zJ9keoxBjDwOKBpCGuWw3BZ6ws3ksVRVTG6LbAaSlQD+xEF1PIx7BM0nPlIs1VrdOd9gF7GH5rbcF/32vpcbxjZiWLH4c6ifGBW6MyV6PUYhtj/J38yH9BRjLNX+qIzM4eniFaW8IeqQhTiwjofZ9DiOKWOKhgDSMH/VCFN1kiKa5QfuYXjIXo+xiGkaYuWyPL4IMeTeeww/X1g0PcaKCUYX1e/SucK+KrGj6tCghsu3eMNDNj1GIrbXNITgEfqqxA6l2/Y4h4fECKbHaMQcGuLryhhSN4NhlvUwPCTTYzStqGgIujpxeKm+Rm6L6pm/QGUdGlzNSjA9xiK2c2iIO4lduyySLuT7cbkt/2s40sRCTBUiplmO9qwWycdjCzPtRaxNVTHG0VuykZB1dWLObTkYRgZ4skjSyW2p88d2qu3hDi4Vm5bhUv9pPDExVSUif+ygr04aDWHy3eNQnwf5Gv8YTvJ5TG4LhAfjuUE2Ymr8BwuJzKzptLIH/M2c4RJLrJBHKFzGjBrCTMw8MjsTMVNrTi8Zmpil0XrodmK67eEMLhUrY1mSayOJeQPaHDma/2VYnWThC0l69k0gsexbNiKx7JBZtSJyOHtMMR7VatO2n8BoeoxHTLM92uDiQGJkZEJlTA8re6SMueYxh7MHGYNLbTNOa3qMRwxZVyehMhasFTH1G49GjDzNkbmuOXsE28MQXNqWmNpnyGx6jKgVjRri/wUTO5CRCSLGLITNWMSIqqDBADZiO5Oz59VmeMgB2eYw01GJrc22RxgxVgwyjBizZ8ciBit4tRPTNEu70WQJLs0sEcmt6RFA7DYQsVLL/arlPIzYlYxMKDHtwJ+HErs6iJWqs6e1PYyGx0bcgzKHmfqIlegUXG2dBlG6iGlxibWGCJQxsq4OJjaqjFUuYlZnz85seHza+teYHl5iZUB+V7u4vjqJGWyPVeiZEk9LzGB7NBtNBsPj84d1JcxNj0MIMdJxAIJU4vXqq5ljXJ18bWIn20aTx/Awmx77IBk7lH98eXxNsoqbmGV18rWJWZw9PsPDYnqEEcu+4ZUbWZP7wIL27cQsGuKpiV28WlE3uOhWtM/wsJgeWM9GMhBjJcddyFjGP08H06RdImZanfz3MZaYeIiJqdXEbuKFZmLinUzEtt5ngXrXTLtXR4x1WeoflSXEj1SW/oTNU9YO1sm17Jxr5b10vzn5yerD3ukmNYr2ZGcYqi5mnP5S+kvyuHcUNDKc2KFcb7fbwtlqYlvxwtyUUSDdSScW8qyi4DIm3wuKxM70l3L/2EbTWuog93goh4NIN/3gTizTexl2OrJDucntI9Qlq2T8Of9SBkIohKZ0nsdDBIzMlRErlUNMbAeG8BkBQznXQt8l3UD5r47aFZ5nVZ03cAXl81Pezc+phG3zDVTTZNQGofwgdgWufH9GkB3LjWuIaC6bMG9iZSDEW2Kp8+1sGzIylBjaHXbdISaWRmeE02GHKznXQiG2+7bbiHfSiCFyhfdZXJupvZKIHRDWE2K0F9Fjhnd7tNI6iMh7aTcztVeCzNF5IdOG9GRTyc8RghsOSMpdYRoC7XY7GDAyoNbRXrrskVj+OAwylsnfvkHGMv+zmJcqU3sFJRl7V37JNAv5EwjVTrs7yF6BvFcFpR+aidFOQWvvqZF47Ka9jb0nSifq32YlDBgZTuwf5A6+hmtiYtMHBCt3Ml2xgjDgaZnWK4kYzpQu0ydRg075k0/t8VhJ8MGWH9qQWbu/EoOE9KH6R3eXv8ov+QOzoJH5/xVY1nm/ZO2PAAAAAElFTkSuQmCC";
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=ms=>{const s=Math.ceil(ms/1000);return String(s/60|0).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+const K='elc_vote_v1', MY='elc_my', QK='elc_qr';
+const VID=localStorage.getItem('elc_vid')||(()=>{const v=((crypto.randomUUID&&crypto.randomUUID())||Math.random().toString(36).slice(2)+Date.now().toString(36)).replace(/-/g,'');localStorage.setItem('elc_vid',v);return v})();
+$$('.logo').forEach(i=>i.src=LOGO); $('#fav').href=LOGO;
+
+/* ② 상태: c=참가자, v=득표, closed=마감, rev=결과공개, end=타이머 종료시각, ep=투표 회차(초기화 시 변경) */
+const norm=x=>{x=x||{};return{
+  c:[0,1,2].map(i=>({n:x.c?.[i]?.n||`참가자 ${i+1}`,t:x.c?.[i]?.t||'스피치 주제를 입력하세요'})),
+  v:[0,1,2].map(i=>+x.v?.[i]||0),closed:!!x.closed,rev:!!x.rev,end:+x.end||0,ep:+x.ep||1}};
+let S=norm(), store, sel=-1, ck='', wasRev=false, lastOpen=true, qrDone='', ready=false, busy=false, OFF=0, rt=0, watch=()=>{};
+const now=()=>Date.now()+OFF;   // Firebase 서버 시간 기준 (폰마다 시계가 달라도 마감이 일치)
+const open=()=>!S.closed&&!(S.end&&now()>=S.end);
+const mine=()=>{try{const m=JSON.parse(localStorage.getItem(MY));return m&&m.ep===S.ep?m.i:-1}catch(e){return -1}};
+const emit=s=>{S=s;ready=true;render()};
+const sched=()=>{clearTimeout(rt);rt=setTimeout(render,100)};   // 투표가 몰려도 화면 갱신은 0.1초 단위로 묶음
+
+/* ③ 스크린 득표 행 (한 번만 생성) */
+const rows=[0,1,2].map(i=>{const e=document.createElement('div');e.className='row blind';
+  e.innerHTML=`<div class="no">${i+1}</div><div class="who"><b></b><span></span></div><div class="pct">집계 중…</div><div class="track"><div class="fill"></div></div>`;
+  $('#rows').append(e);return{e,b:e.querySelector('b'),s:e.querySelector('.who span'),p:e.querySelector('.pct'),f:e.querySelector('.fill')}});
+
+/* ④ 렌더링 */
+function render(){
+  const scr=location.hash==='#screen';
+  document.documentElement.style.fontSize=scr?'clamp(13px,1.05vw,30px)':'';
+  document.body.classList.toggle('scr',scr);
+  $('#v-aud').classList.toggle('hide',scr);$('#v-scr').classList.toggle('hide',!scr);$('.bar').classList.toggle('hide',!scr);
+  lastOpen=open(); rHead(); scr?rScr():rAud();
+}
+function rHead(){
+  $('#st').textContent=!ready?'연결 중…':open()?'투표 진행 중'+(S.end?' '+fmt(S.end-now()):''):S.rev?'결과 발표':'투표 마감';
+  $('#pill').classList.toggle('off',!ready||!open());
+}
+function rAud(){
+  const m=mine(),o=open(),msg=S.rev?'🎉 결과가 발표됐어요! 스크린을 확인해 주세요.':'결과는 곧 스크린에서 공개됩니다.';
+  $('#a-load').classList.toggle('hide',ready);
+  $('#a-vote').classList.toggle('hide',!ready||m>=0||!o);$('#a-done').classList.toggle('hide',m<0);$('#a-off').classList.toggle('hide',!ready||m>=0||o);
+  const k=JSON.stringify(S.c);   // 이름/주제가 바뀔 때만 카드를 다시 그려 터치가 끊기지 않게 함
+  if(k!==ck){ck=k;$('#a-cards').innerHTML=S.c.map((c,i)=>`<button class="card" data-i="${i}"><div class="no">${i+1}</div><div><b>${esc(c.n)}</b><span>${esc(c.t)}</span></div></button>`).join('')}
+  $$('#a-cards .card').forEach((c,i)=>c.classList.toggle('sel',i===sel));
+  $('#a-go').disabled=sel<0||busy;
+  if(m>=0){$('#a-my').textContent=`기호 ${m+1}번 ${S.c[m].n} 참가자에게 투표했어요.`;$('#a-msg').textContent=msg}
+  else $('#a-off .sub').textContent=msg;
+}
+function rScr(){
+  qr();
+  const tot=S.v.reduce((a,b)=>a+b,0),mx=Math.max(...S.v),rk=[0,1,2].sort((a,b)=>S.v[b]-S.v[a]),t=$('#tot');
+  if(t.textContent!=tot){t.textContent=tot;t.classList.remove('bump');void t.offsetWidth;t.classList.add('bump')}
+  const anim=S.rev&&!wasRev; wasRev=S.rev;
+  rows.forEach((r,i)=>{
+    r.b.textContent=S.c[i].n;r.s.textContent=S.c[i].t;
+    const p=tot?S.v[i]/tot*100:0,d=anim?(2-rk.indexOf(i))*.9:0;   // 3위 → 2위 → 1위 순서로 공개
+    r.e.classList.toggle('blind',!S.rev);
+    r.f.style.transitionDelay=d+'s';r.f.style.width=S.rev?p+'%':'0%';
+    if(!S.rev){r.p.textContent='집계 중…';r.e.classList.remove('win')}
+    else if(anim)cnt(r.p,p,S.v[i],d*1000);
+    else r.p.innerHTML=`${p.toFixed(1)}<small>%</small><em>${S.v[i]}표</em>`;
+    clearTimeout(r.t);r.t=setTimeout(()=>r.e.classList.toggle('win',!!(S.rev&&tot&&S.v[i]===mx)),anim?3600:0);
+  });
+  if(anim&&tot)setTimeout(boom,3600);
+  $('#b-close').textContent=open()?'⏹ 투표 마감':'↺ 투표 재개';
+  $('#b-rev').textContent=S.rev?'블라인드로 되돌리기':'🏆 결과 공개';
+}
+function cnt(el,p,v,delay){const t0=performance.now()+delay;(function f(t){const k=Math.min(1,Math.max(0,(t-t0)/1600)),e=1-Math.pow(1-k,3);
+  el.innerHTML=`${(p*e).toFixed(1)}<small>%</small><em>${Math.round(v*e)}표</em>`;k<1&&requestAnimationFrame(f)})(performance.now())}
+function boom(){for(let i=0;i<70;i++){const d=document.createElement('i');d.className='cf';
+  d.style.cssText=`left:${Math.random()*100}vw;background:${['#F4EE5A','#B8A6F2','#272560','#fff'][i%4]};animation-delay:${Math.random()*.8}s;--x:${(Math.random()-.5)*240}px`;
+  document.body.append(d);setTimeout(()=>d.remove(),4600)}}
+function qr(){
+  const u=localStorage.getItem(QK)||location.href.split('#')[0];if(u===qrDone)return;qrDone=u;
+  if(typeof QRCode==='undefined'){$('#url').textContent='QR 라이브러리를 불러오지 못했어요. 인터넷 연결을 확인하세요.';return}
+  $('#qr').innerHTML='';new QRCode($('#qr'),{text:u,width:512,height:512,colorDark:'#272560',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+  $('#url').textContent=u.replace(/^https?:\/\//,'')+(location.protocol==='file:'&&!localStorage.getItem(QK)?' (로컬 파일 주소예요. 설정에서 배포 URL을 입력하세요)':'');
+}
+
+/* ⑤ 청중 동작: 서버가 저장을 확인(ack)한 뒤에만 "투표 완료" 처리 */
+$('#a-cards').onclick=e=>{const c=e.target.closest('.card');if(!c||!open()||mine()>=0||busy)return;sel=+c.dataset.i;rAud()};
+$('#a-go').onclick=async()=>{
+  if(sel<0||busy||mine()>=0||!open())return;
+  const b=$('#a-go'),i=sel;busy=true;b.disabled=true;b.textContent='전송 중…';
+  try{await store.vote(i);localStorage.setItem(MY,JSON.stringify({ep:S.ep,i}));sel=-1;store.done&&store.done()}
+  catch(e){alert(e==='closed'?'투표가 마감되어 반영되지 않았어요.':'전송이 지연되고 있어요. 네트워크를 확인하고 다시 눌러 주세요.')}
+  busy=false;b.textContent='투표하기';render();
+};
+
+/* ⑥ 진행자 동작 */
+$('#b-start').onclick=()=>store.set({end:now()+$('#min').value*6e4,closed:false,rev:false});
+$('#b-close').onclick=()=>store.set(open()?{closed:true}:{closed:false,end:0,rev:false});
+$('#b-rev').onclick=()=>store.set(S.rev?{rev:false}:{rev:true,closed:true});
+$('#b-gear').onclick=()=>{
+  $('#ed').innerHTML=S.c.map((c,i)=>`<div class="er"><span>${i+1}</span><input id="n${i}" value="${esc(c.n)}" placeholder="참가자 이름"><input id="t${i}" value="${esc(c.t)}" placeholder="스피치 주제"></div>`).join('');
+  $('#qrurl').value=localStorage.getItem(QK)||'';
+  $('#d-info').textContent=useFB()?'Firebase 실시간 모드입니다. 모든 기기의 투표가 서버에서 합산되고, 마감과 타이머도 서버 시간 기준으로 적용돼요. 부하 테스트 후에는 반드시 전체 초기화를 눌러 주세요.':'데모/로컬 모드입니다. 이 브라우저 안에서만 집계돼요. 여러 스마트폰을 합산하려면 코드 상단의 Firebase 설정을 입력하세요.';
+  $('#dlg').showModal()};
+$('#d-save').onclick=()=>{
+  store.set({c:[0,1,2].map(i=>({n:$('#n'+i).value.trim()||`참가자 ${i+1}`,t:$('#t'+i).value.trim()||'스피치 주제'}))});
+  const q=$('#qrurl').value.trim();q?localStorage.setItem(QK,q):localStorage.removeItem(QK);qrDone='';$('#dlg').close();render()};
+$('#d-my').onclick=()=>{localStorage.removeItem(MY);render();$('#dlg').close()};
+$('#d-test').onclick=()=>{if(!open()){alert('투표가 열려 있을 때만 테스트할 수 있어요. 먼저 투표를 재개해 주세요.');return}
+  if(confirm('가짜 70표를 동시에 전송해 부하를 테스트합니다. 끝나면 전체 초기화를 눌러 주세요.'))store.fake(70);$('#dlg').close()};
+$('#d-reset').onclick=()=>{
+  if(!confirm('투표 현황(득표수와 모든 기기의 투표 기록)을 0으로 초기화합니다.\n되돌릴 수 없어요. 계속할까요?'))return;
+  localStorage.removeItem(MY);sel=-1;store.set({v:[0,0,0],rev:false,closed:false,end:0,ep:Date.now()});$('#dlg').close()};
+$('#d-x').onclick=()=>$('#dlg').close();
+
+/* ⑦ 저장소: Firebase 또는 로컬
+ *   Firebase 구조: meta(설정·상태) + votes/{회차}/{기기ID}=후보번호
+ *   기기마다 서로 다른 키에 한 번만 쓰므로 70명이 동시에 눌러도 충돌(재시도)이 없고,
+ *   청중 폰은 meta만 구독하고 득표 집계는 스크린 화면만 구독해서 트래픽이 적습니다. */
+const useFB=()=>!!(FB_CONFIG.apiKey&&(FB_CONFIG.databaseURL||FB_CONFIG.projectId));
+const load=u=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=no;document.head.append(s)});
+const setMode=t=>$('#mode').textContent=t;
+async function boot(){
+  if(useFB()){
+    try{
+      const b='https://www.gstatic.com/firebasejs/10.12.2/firebase-';
+      await load(b+'app-compat.js');await load(b+'database-compat.js');
+      firebase.initializeApp({apiKey:FB_CONFIG.apiKey,projectId:FB_CONFIG.projectId,
+        databaseURL:FB_CONFIG.databaseURL||`https://${FB_CONFIG.projectId}-default-rtdb.firebaseio.com`});
+      const db=firebase.database(),root=db.ref(FB_PATH),meta=root.child('meta');let vref=null,vep=0;
+      db.ref('.info/serverTimeOffset').on('value',s=>{OFF=s.val()||0});
+      db.ref('.info/connected').on('value',s=>setMode(s.val()?'LIVE 실시간 동기화':'연결 끊김'));
+      watch=()=>{   // 득표 집계는 스크린 화면에서만 구독
+        if(location.hash!=='#screen'||(vref&&vep===S.ep))return;
+        vref&&vref.off();vep=S.ep;vref=root.child('votes/'+S.ep);
+        vref.on('value',sn=>{const v=[0,0,0];sn.forEach(c=>{const x=c.val();if(x>=0&&x<3)v[x|0]++});S={...S,v};sched()})};
+      store={
+        set:p=>{const{v,...q}=p;return meta.update(q)},
+        vote:i=>{const ref=root.child(`votes/${S.ep}/${VID}`);
+          const w=ref.set(i).catch(async e=>{const g=await ref.get();if(g.exists()&&g.val()===i)return;throw'closed'});
+          return Promise.race([w,new Promise((_,no)=>setTimeout(()=>no('slow'),10000))])},
+        done:()=>FREE_CONN&&setTimeout(()=>db.goOffline(),1500),
+        fake:n=>Promise.all([...Array(n)].map(()=>root.child(`votes/${S.ep}/test${Math.random().toString(36).slice(2,10)}`).set(Math.random()*3|0)))};
+      meta.on('value',sn=>{
+        if(!sn.exists()){if(location.hash==='#screen'){const{v,...m}=norm();meta.set({...m,ep:Date.now()})}return}   // 초기 데이터는 스크린 화면만 생성
+        const m=norm(sn.val());emit({...m,v:m.ep===S.ep?S.v:[0,0,0]});watch()});
+      return;
+    }catch(e){console.error(e);setMode('Firebase 연결 실패, 데모 모드')}
+  }
+  const rd=()=>norm(JSON.parse(localStorage.getItem(K))),wr=s=>{localStorage.setItem(K,JSON.stringify(s));emit(s)};
+  store={vote:i=>{const s=rd();s.v[i]++;wr(s)},set:p=>wr({...rd(),...p}),fake:n=>{const s=rd();for(let k=0;k<n;k++)s.v[Math.random()*3|0]++;wr(s)}};
+  if(!localStorage.getItem(K))localStorage.setItem(K,JSON.stringify({...norm(),ep:Date.now()}));
+  addEventListener('storage',e=>e.key===K&&emit(rd()));   // 같은 브라우저의 다른 탭과 실시간 연동
+  if(!$('#mode').textContent)setMode('DEMO 로컬 모드');emit(rd());
+}
+addEventListener('hashchange',()=>{render();watch()});
+setInterval(()=>{ // 타이머 갱신, 시간이 끝나면 자동으로 마감 화면 전환
+  const r=S.end?Math.max(0,S.end-now()):0;
+  $('#tmr').textContent=S.end?fmt(r):'--:--';$('#tmr').classList.toggle('low',open()&&S.end&&r<=10000);
+  rHead();if(ready&&open()!==lastOpen)render();
+},250);
+render();boot();
+</script>
+</body>
+</html>
